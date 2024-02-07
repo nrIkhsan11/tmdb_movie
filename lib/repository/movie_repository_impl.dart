@@ -11,7 +11,7 @@ class MovieRepositoryImpl implements MovieRepository {
   @override
   Future<Either<String, MovieResponseModel>>getDiscover({int page = 1}) async {
     try{
-      final result = await _dio.get('/discover/movie', queryParameters: {'page': page = 1});
+      final result = await _dio.get('/discover/movie', queryParameters: {'page': page});
       if(result.statusCode == 200 && result.data != null){
         final model = MovieResponseModel.fromMap(result.data);
         return Right(model);
