@@ -14,6 +14,7 @@ dependencies:
   flutter_native_splash: ^2.3.10
   dio: ^5.4.0
   provider: ^6.1.1
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:
