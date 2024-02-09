@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdb_movie/constants/appconstant.dart';
 import 'package:tmdb_movie/models/movie_models.dart';
+import 'package:tmdb_movie/pages/movie_page.dart';
+import 'package:tmdb_movie/pages/movie_pagination.dart';
 import 'package:tmdb_movie/provider/movieGetDiscoverProvider.dart';
 import 'package:tmdb_movie/widget/image_network_widget.dart';
+import 'package:tmdb_movie/widget/item_movie_widget.dart';
 
 class MoviePage extends StatelessWidget {
   const MoviePage({super.key});
@@ -42,7 +45,12 @@ class MoviePage extends StatelessWidget {
                   children: [
                     Text('Discover Movies', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     OutlinedButton(
-                      onPressed: (){},
+
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => MoviePagination()
+                        ));
+                      },
+
                       child: const Text('See all'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.black54,
@@ -87,7 +95,7 @@ class _WidgetDiscoverMovieState extends State<WidgetDiscoverMovie> {
           if (provider.isLoading) {
             return Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
-              height: 200,
+              height: 300,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.black26,
@@ -101,10 +109,15 @@ class _WidgetDiscoverMovieState extends State<WidgetDiscoverMovie> {
               itemCount: provider.movies.length,
               itemBuilder: (_,index, __){
                 final movie = provider.movies[index];
-                return ItemMovie(movie);
+                return ItemMovieWidget(
+                    movie: movie,
+                  widthBackdropPath: double.infinity,
+                  heightBackdropPath: 280,
+                  heightPosterPath: 120,
+                  widthPosterPath: 80);
               },
               options: CarouselOptions(
-                height: 200,
+                height: 280,
                 viewportFraction: 0.8,
                 reverse: false,
                 autoPlay: true,
@@ -133,89 +146,4 @@ class _WidgetDiscoverMovieState extends State<WidgetDiscoverMovie> {
       ),
     );
   }
-}
-
-class ItemMovie extends Container{
-
-  final MovieModel movie;
-
-  ItemMovie(this.movie, {super.key});
-
-  @override
-  // TODO: implement clipBehavior
-  Clip get clipBehavior => Clip.hardEdge;
-
-  @override
-  // TODO: implement decoration
-  Decoration? get decoration => BoxDecoration(
-    borderRadius: BorderRadius.circular(5)
-  );
-
-  @override
-  Widget? get child => Stack(
-    children: [
-      ImageNetworkWidget(
-        imageSrc: '${movie.backdropPath}',
-        height: 200,
-        width: double.infinity,
-      ),
-      Container(
-        height: 200,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.transparent,
-                Colors.black,
-              ]),
-        ),
-      ),
-
-      Positioned(
-          bottom: 10,
-          left: 15,
-          right: 15,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              ImageNetworkWidget(
-                imageSrc: '${movie.posterPath}',
-                height: 120,
-                width: 80,
-                radius: 5,
-              ),
-
-              const SizedBox(height: 5,),
-
-              Text(movie.title,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 15
-                ),
-              ),
-              const SizedBox(height: 2,),
-
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5),
-                    child: Icon(Icons.stars_sharp,
-                      color: Colors.yellow,
-                    ),
-                  ),
-                  Text('${movie.voteAverage} (${movie.voteCount})',
-                      style: TextStyle(fontStyle: FontStyle.normal,
-                          color: Colors.white)
-                  )
-                ],
-              ),
-            ],
-          )
-      )
-    ],
-  );
 }
